@@ -4,7 +4,11 @@ from fastapi import FastAPI
 from fastapi.background import BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-import requests, time
+import requests, time, os
+from dotenv import load_dotenv
+
+load_dotenv()
+print(os.environ["password"])
 
 app = FastAPI()
 app.add_middleware(
@@ -17,7 +21,7 @@ app.add_middleware(
 redis = get_redis_connection(
     host="redis-17080.c281.us-east-1-2.ec2.cloud.redislabs.com",
     port=17080,
-    password="iSnsjf4WrRXuyQZB3PFFbUKWUuuC7lcM",
+    password=os.environ["password"],
     decode_responses=True
 )
 
@@ -57,3 +61,4 @@ def order_completed(order: Order):
     time.sleep(5)
     order.status = "completed"
     order.save()
+    redis.xadd("order_complete", order,dict(), "*")

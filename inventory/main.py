@@ -2,6 +2,10 @@ from typing import Union
 from redis_om import get_redis_connection, HashModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = FastAPI()
 app.add_middleware(
@@ -14,7 +18,7 @@ app.add_middleware(
 redis = get_redis_connection(
     host="redis-17080.c281.us-east-1-2.ec2.cloud.redislabs.com",
     port=17080,
-    password="iSnsjf4WrRXuyQZB3PFFbUKWUuuC7lcM",
+    password=os.environ["password"],
     decode_responses=True
 )
 
